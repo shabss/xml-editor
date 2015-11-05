@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jstree basic demos</title>
+	<style>
+	html { margin:0; padding:0; font-size:62.5%; }
+	body { max-width:800px; min-width:300px; margin:0 auto; padding:20px 10px; font-size:14px; font-size:1.4em; }
+	h1 { font-size:1.8em; }
+	.demo { overflow:auto; border:1px solid silver; min-height:100px; }
+	</style>
+	<link rel="stylesheet" href="./jstree/dist/themes/default/style.min.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>    
+	<script src="./jstree/dist/jstree.min.js"></script>
+    <script src="./json2xml/json2xml.js"></script>
+</head>
+<body>
+	<h1>XML Editor</h1>
+
+	<div id="evts" class="demo"></div>
+	<button id="show_xml">Show XML</button><br>
+    <textarea id="xml_area" style="width: 800px; height: 450px;"></textarea>
+
+	<script>
+    
+	$('#show_xml').on("click", function () {
+        var json_data = jQuery("#evts").jstree(true).get_json('#', {flat:true});
+        var json_text = JSON.stringify(json_data);
+        
+        json2xml(
+            {"Foo": {"@": { "baz": "bar", "production":"true" }}}, 
+            "Test", 
+            function(xml){
+                console.log(xml); // log the XML data
+            }
+        );
+        json2xml(
+            json_data, "TheNode", 
+            function(xml){
+                $('#xml_area').val(xml);
+            }
+        );
+	});
+
+	$('#evts')
+		.on("changed.jstree", function (e, data) {
+			//if(data.selected.length) {
+			//	alert('The selected node is: ' + data.instance.get_node(data.selected[0]).text);
+			//}
+            //alert(e);
+		})
+		.jstree({
+			'core' : {
+                'check_callback' : true,
+				'multiple' : false,
+				'data' : [
+					{ "text" : "Root node", "children" : [
+							{ "text" : "Child node 1", "id" : 1 },
+							{ "text" : "Child node 2" }
+					]}
+				]
+			},
+            'plugins' : ['contextmenu', 'types'],
+            'types' : {
+                'default' : {
+                    'icon' : 'glyphicon glyphicon-flash'
+                },
+                'tag' : {
+                    'icon' : 'glyphicon glyphicon-flash'
+                },
+                'field' : {
+                    'icon' : 'glyphicon glyphicon-ok'
+                },
+                'data' : {
+                    'icon' : 'glyphicon glyphicon-file'
+                }
+                
+            }
+		})
+        .bind("dblclick.jstree", function (event) {
+            //var node = $(event.target).closest("li");
+            //var data = node.data("jstree");
+
+            var CurrentNode = jQuery("#evts").jstree("get_selected");
+            var type = $("#evts").jstree('get_type', CurrentNode);
+            
+            //alert("double click:" + type);
+            switch (type) {
+                case 'default':
+                case 'tag':
+                    type = 'field';
+                    break;
+                case 'field':
+                    type = 'data';
+                    break;
+                case 'data':
+                    type = 'tag';
+                    break;
+            }
+            var type = $("#evts").jstree('set_type', CurrentNode, type);
+        });
+	</script>
+</body>
+</html>
