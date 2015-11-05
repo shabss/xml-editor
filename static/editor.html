@@ -19,10 +19,24 @@
 <body>
 	<h1>XML Editor</h1>
 
+    <h3>Tips:</h3>
+    <ul>
+        <li>Right click on the nodes to edit them.</li>
+        <li>Double click on the nodes to toggle types. Types are Elements, Fields and Values</li>
+    </ul> <br> <br>
+
+
 	<div id="evts" class="demo"></div>
-	<button id="show_xml">Show XML</button><br>
+	<button id="show_xml">Show XML</button><br><br>
     <textarea id="xml_area" style="width: 800px; height: 450px;"></textarea>
 
+    <h3>To Do:</h3>
+    <ul>
+        <li>Define application specific XML format and convert appropiately</li>
+        <li>Display tool tips and improve icons for node types</li>
+        <li>Data and rules validation</li>
+        <li>Load xml and show in a tree</li>
+    </ul> <br><br>    
 	<script>
     
 	$('#show_xml').on("click", function () {
