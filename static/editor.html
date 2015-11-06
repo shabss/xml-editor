@@ -41,8 +41,9 @@
     
 	$('#show_xml').on("click", function () {
         var json_data = jQuery("#evts").jstree(true).get_json('#', {flat:true});
+        var json_data = {'EditorNode': json_data};
         var json_text = JSON.stringify(json_data);
-        
+        console.log(json_text);
         json2xml(
             {"Foo": {"@": { "baz": "bar", "production":"true" }}}, 
             "Test", 
@@ -51,7 +52,7 @@
             }
         );
         json2xml(
-            json_data, "TheNode", 
+            json_data, "GlobalRoot", 
             function(xml){
                 $('#xml_area').val(xml);
             }
